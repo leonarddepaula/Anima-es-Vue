@@ -92,6 +92,62 @@ body {
 </style>
 
 <style scoped>
+/* v-enter - efeito fade in
+
+
+.v-enter-from {
+  opacity: 0;
+}
+
+.v-enter-active {
+  transition: opacity 1s;
+}
+
+.v-enter-to {
+  opacity: 1;
+}
+
+.v-leave-from {
+  opacity: 1;
+}
+
+.v-leave-active {
+  transition: opacity 0.5s;
+}
+
+.v-leave-to{
+  opacity: 0;
+}
+*/
+
+.v-enter-from {
+  opacity: 0;
+  transform: translateX(-150px);
+}
+
+.v-enter-active {
+  transition: 2s;
+}
+
+.v-enter-to {
+  opacity: all 1s;
+  transform: translateX(0px);
+}
+
+.v-leave-from {
+  opacity: 1;
+  transform: translateX(0px);
+}
+
+.v-leave-active {
+  transition: all 1s;
+}
+
+.v-leave-to {
+  opacity: 0;
+  transform: translateX(150px);
+}
+
 .pokedex {
   padding: 20px;
   background-color: #ffffff;
