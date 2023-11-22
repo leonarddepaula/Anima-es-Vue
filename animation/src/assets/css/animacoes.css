@@ -1,0 +1,154 @@
+/* efeito fade */
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 1s;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1;
+}
+
+/* efeito slide */
+.slide-enter-from {
+    opacity: 0;
+    transform: translateX(-150px);
+}
+
+.slide-enter-active {
+    transition: 2s;
+}
+
+.slide-enter-to {
+    opacity: all 1s;
+    transform: translateX(0px);
+}
+
+.slide-leave-from {
+    opacity: 1;
+    transform: translateX(0px);
+}
+
+.slide-leave-active {
+    transition: all 1s;
+}
+
+.slide-leave-to {
+    opacity: 0;
+    transform: translateX(150px);
+}
+
+/* zoom */
+.zoom-enter-from {
+    transform: scale(0);
+}
+
+.zoom-enter-active {
+    transition: transform 1s;
+}
+
+.zoom-enter-to {
+    transform: scale(1);
+}
+
+.zoom-leave-from {
+    transform: scale(1);
+}
+
+.zoom-leave-active {
+    transition: transform 1s;
+}
+
+.zoom-leave-to {
+    transform: scale(0);
+}
+
+/* flip */
+
+.flip-enter-active {
+    animation: flipCustomizado 2s;
+}
+
+.flip-leave-active {
+    animation: flipCustomizado 2s reverse;
+}
+
+@keyframes flip {
+    from {
+        transform: rotateY(-85deg);
+    }
+    to {
+        transform: rotateY(0deg);
+    }
+}
+
+@keyframes flipCustomizado {
+    0% {
+        transform: rotateY(-85deg);
+    }
+    25% {
+        transform: rotateY(-65deg);
+    }
+    50% {
+        transform: rotateY(-25deg);
+    }
+    100% {
+        transform: rotateY(-0deg);
+    }
+}
+
+/* combinando transition e animation */
+/* efeito de pulo */
+.pulo-enter-from {
+    opacity: 0;
+}
+.pulo-enter-active {
+    animation: pulo 2s;
+    transition: 1.5s;
+}
+
+.pulo-enter-to {
+    opacity: 1;
+}
+
+.pulo-leave-from {
+    opacity: 1;
+}
+
+.pulo-leave-active {
+    transition: opacity 1s;
+    animation: pulo 1s;
+}
+
+.pulo-leave-to {
+    opacity: 0;
+}
+
+@keyframes pulo {
+    0% {
+        transform: scale(1, 1) translateY(0);
+    }
+    10% {
+        transform: scale(1, 1, 0.9) translateY(0);
+    }
+    30% {
+        transform: scale(0.9, 1.1) translateY(-30px);
+    }
+    50% {
+        transform: scale(1.05, 0.95) translateY(0);
+    }
+    57% {
+        transform: scale(1, 1) translateY(-8px);
+    }
+    64% {
+        transform: scale(1, 1) translateY(0);
+    }
+    100% {
+        transform: scale(1, 1) translateY(0);
+    }
+}

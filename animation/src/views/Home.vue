@@ -9,9 +9,20 @@
 
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
-              <transition>
+              <transition name="pulo" :duration="{enter: 2000, leave: 1000}">
                 <img src="@/assets/imgs/pokemons/001.png" v-if="exibir">
               </transition>
+
+              <div class="evolucoes">
+                <transition name="fade">
+                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibir">
+                </transition>
+                
+                <transition name="fade">
+                  <img src="@/assets/imgs/pokemons/002.png" v-if="exibir">
+                </transition>
+  
+              </div>
             </div>
           </div>
 
@@ -92,61 +103,8 @@ body {
 </style>
 
 <style scoped>
-/* v-enter - efeito fade in
 
-
-.v-enter-from {
-  opacity: 0;
-}
-
-.v-enter-active {
-  transition: opacity 1s;
-}
-
-.v-enter-to {
-  opacity: 1;
-}
-
-.v-leave-from {
-  opacity: 1;
-}
-
-.v-leave-active {
-  transition: opacity 0.5s;
-}
-
-.v-leave-to{
-  opacity: 0;
-}
-*/
-
-.v-enter-from {
-  opacity: 0;
-  transform: translateX(-150px);
-}
-
-.v-enter-active {
-  transition: 2s;
-}
-
-.v-enter-to {
-  opacity: all 1s;
-  transform: translateX(0px);
-}
-
-.v-leave-from {
-  opacity: 1;
-  transform: translateX(0px);
-}
-
-.v-leave-active {
-  transition: all 1s;
-}
-
-.v-leave-to {
-  opacity: 0;
-  transform: translateX(150px);
-}
+@import '~@/assets/css/animacoes.css';
 
 .pokedex {
   padding: 20px;
@@ -244,5 +202,19 @@ body {
 
 .detalhes {
   margin: 20px 30px 20px 30px;
+}
+
+.evolucoes {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 70px;
+}
+
+.evolucoes img {
+  cursor: pointer;
+  max-width: 100%;
+  max-height: 100%;
+  float: right;
 }
 </style>
