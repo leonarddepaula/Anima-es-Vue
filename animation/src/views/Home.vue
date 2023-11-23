@@ -9,7 +9,14 @@
 
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
-              <transition name="pulo" :duration="{enter: 2000, leave: 1000}">
+              <transition
+                
+                enter-active-class="animate__animated animate__bounceIn"
+                
+                
+                leave-active-class="animate__animated animate__bounceOut"
+                
+              >
                 <img src="@/assets/imgs/pokemons/001.png" v-if="exibir">
               </transition>
 

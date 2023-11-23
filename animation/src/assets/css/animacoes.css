@@ -152,3 +152,28 @@
         transform: scale(1, 1) translateY(0);
     }
 }
+
+/* slide de cima parea baixo usando nomes de classes customizadas */
+/* .entrada-estado-inicial {
+    opacity: 0;
+    transform: translateY(-150px);
+}
+
+.entrada-estado-final {
+    opacity: 1;
+    transition: translateY(0px);
+}
+
+.saida-estado-inicial {
+    opacity: 1;
+    transition: translateY(0px);
+}
+
+.saida-estado-final {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.transicao {
+    transition: all 2s;
+} */
