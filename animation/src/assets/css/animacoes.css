@@ -154,7 +154,7 @@
 }
 
 /* slide de cima parea baixo usando nomes de classes customizadas */
-/* .entrada-estado-inicial {
+/* .entrada-estado-inicial { 
     opacity: 0;
     transform: translateY(-150px);
 }
@@ -177,3 +177,36 @@
 .transicao {
     transition: all 2s;
 } */
+
+/* trasition-group lista que terá um efeito de slide */
+.lista-enter-from {
+    opacity: 0;
+    transform: translateX(-150px);
+}
+
+.lista-enter-active {
+    transition: 1s;
+}
+
+.lista-enter-to {
+    opacity: all 1s;
+    transform: translateX(0px);
+}
+
+.lista-leave-from {
+    opacity: 1;
+    transform: translateX(0px);
+}
+
+.lista-leave-active {
+    transition: all 1s;
+    position: absolute;
+}
+
+.lista-leave-to {
+    opacity: 0;
+    transform: translateX(150px);
+}
+.lista-move {
+    transition: all 1s;
+}

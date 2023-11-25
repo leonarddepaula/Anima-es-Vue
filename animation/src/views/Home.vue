@@ -9,26 +9,21 @@
 
           <div class="card-body bg-pokebola bg-normal">
             <div class="pokemon">
-              <transition
-                
+
+              <transition @after-enter="exibirEvolucoesTransicao" @before-leave="ocultarEvolucoesTransicoes"
                 enter-active-class="animate__animated animate__bounceIn"
-                
-                
-                leave-active-class="animate__animated animate__bounceOut"
-                
-              >
-                <img src="@/assets/imgs/pokemons/001.png" v-if="exibir">
+                leave-active-class="animate__animated animate__bounceOut">
+                <img :src="require(`@/assets/imgs/pokemons/${pokemon.imagem}`)" v-if="exibir">
               </transition>
 
               <div class="evolucoes">
-                <transition name="fade">
-                  <img src="@/assets/imgs/pokemons/003.png" v-if="exibir">
+
+                <transition name="fade" v-for="e in pokemon.evolucoes" :key="e">
+                  <img :src="require(`@/assets/imgs/pokemons/${e.toString().padStart(3, '0')}.png`)"
+                    v-if="exibirEvolucoes">
+
                 </transition>
-                
-                <transition name="fade">
-                  <img src="@/assets/imgs/pokemons/002.png" v-if="exibir">
-                </transition>
-  
+
               </div>
             </div>
           </div>
@@ -37,10 +32,21 @@
 
             <nav class="nav nav-pills nav-fill">
               <!-- menu de navegação -->
+              <router-link class="nav-item nav-link text-white" :to="{ path: '/sobre' }"
+                exact-active-class="active">Sobre</router-link>
+              <router-link class="nav-item nav-link text-white" :to="{ path: '/status' }"
+                exact-active-class="active">Status</router-link>
+              <router-link class="nav-item nav-link text-white" :to="{ path: '/Habilidades' }"
+                exact-active-class="active">Habilidades</router-link>
             </nav>
 
             <div class="detalhes">
-              <!-- exibe dados de acordo com o menu de navegação -->
+              <router-view v-slot="{ Component }" :pokemon="pokemon" @adicionarHabilidade="adicionarHabilidade"
+                @removerHabilidade="removerHabilidade">
+                <transition enter-active-class="animate__animated animate__zoomInDown">
+                  <component :is="Component" />
+                </transition>
+              </router-view>
             </div>
 
           </div>
@@ -58,9 +64,10 @@
 
         <div class="row">
           <div class="col">
-            <select class="form-select">
-              <option>Id crescente</option>
-              <option>Id decrescrente</option>
+            <select class="form-select" v-model="ordenacao">
+              <option value="" disabled>Ordenar Pokémon</option>
+              <option value="1">Id crescente</option>
+              <option value="2">Id decrescrente</option>
               <option>De A - Z</option>
             </select>
           </div>
@@ -74,11 +81,13 @@
           <div class="pokedex-catalogo">
 
             <!-- início listagem dinâmica -->
-            <div class="cartao-pokemon bg-grama" @click="exibir = !exibir">
-              <h1>1 Bulbasaur</h1>
-              <span>grama</span>
+            <div v-for="p in pokemons" :key="p.id" :class="`cartao-pokemon bg-${p.tipo}`" @click="analisarPokemon(p)">
+              <h1>{{ p.id }} {{ p.nome }}</h1>
+              <span>{{ p.tipo }}</span>
               <div class="cartao-pokemon-img">
-                <img src="@/assets/imgs/pokemons/001.png">
+                <transition appear enter-active-class="animate__animated animate__fadeInDown">
+                  <img :src="require(`@/assets/imgs/pokemons/${p.imagem}`)">
+                </transition>
               </div>
             </div>
             <!-- fim listagem dinâmica -->
@@ -97,8 +106,90 @@ export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Home',
   data: () => ({
-    exibir: false
-  })
+    exibir: false,
+    exibirEvolucoes: false,
+    pokemon: {},
+    pokemons: [],
+    ordenacao: ''
+  }),
+  watch: {
+    ordenacao(valorNovo) {
+      console.log(this.pokemons);
+      if (valorNovo == 1) {
+        this.pokemons.sort((proximo, atual) => {
+         
+         if(atual.id < proximo.id) {
+           return 1
+         }else if(atual.id > proximo.id){
+           return -1
+         }
+
+         return 0
+       })
+      }
+      if (valorNovo == 2) {
+        this.pokemons.sort((proximo, atual) => {
+         
+          if(atual.id < proximo.id) {
+            return -1
+          }else if(atual.id > proximo.id){
+            return 1
+          }
+
+          return 0
+        })
+      }
+    }
+  },
+  created() {
+    fetch('http://localhost:3000/pokemons')
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        this.pokemons = data
+      })
+  },
+  methods: {
+    exibirEvolucoesTransicao() {
+      this.exibirEvolucoes = true
+    },
+    ocultarEvolucoesTransicoes() {
+      this.exibirEvolucoes = false
+    },
+    analisarPokemon(p) {
+
+      let mudaPokemonAnalisado = false
+      // se o pokemon atual é diferente do pokemon clicado
+      // se o atriubuto exibur é true
+      if ((this.pokemon.id != p.id && this.exibir == true)) {
+        setTimeout(() => {
+          this.analisarPokemon(p)
+        }, 800)
+
+        mudaPokemonAnalisado = true
+      }
+      this.pokemon = p
+      this.exibir = !this.exibir
+      this.exibirEvolucoes = !this.exibirEvolucoes // toggle
+
+      // se a ação for de ocultar o pokemon
+      if (!this.exibir && !mudaPokemonAnalisado) {
+        this.pokemon = {}
+      }
+    },
+    adicionarHabilidade(habilidade) {
+      console.log('ESTAMOS NO COMPONENTE PAI COM A HABILIDADE: ', habilidade);
+      if (this.pokemon.habilidades) {
+        this.pokemon.habilidades.push(habilidade)
+      }
+    },
+    removerHabilidade(indice) {
+      if (this.pokemon.habilidades[indice]) {
+        this.pokemon.habilidades.splice(indice, 1)
+      }
+    }
+  }
 }
 
 </script>
@@ -110,7 +201,6 @@ body {
 </style>
 
 <style scoped>
-
 @import '~@/assets/css/animacoes.css';
 
 .pokedex {
@@ -209,6 +299,7 @@ body {
 
 .detalhes {
   margin: 20px 30px 20px 30px;
+
 }
 
 .evolucoes {
@@ -222,6 +313,6 @@ body {
   cursor: pointer;
   max-width: 100%;
   max-height: 100%;
-  float: right;
+
 }
 </style>
