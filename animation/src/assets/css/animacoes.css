@@ -210,3 +210,8 @@
 .lista-move {
     transition: all 1s;
 }
+
+/* trasition-group para filtro de ordenação */
+.ordenacao-move {
+    transition: all 2s;
+}

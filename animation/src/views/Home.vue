@@ -68,19 +68,35 @@
               <option value="" disabled>Ordenar Pokémon</option>
               <option value="1">Id crescente</option>
               <option value="2">Id decrescrente</option>
-              <option>De A - Z</option>
+              <option value="3">De A - Z</option>
+              <option value="4">De Z - A (localeCompare)</option>
             </select>
           </div>
 
           <div class="col">
-            <input type="text" class="form-control" placeholder="Pesquisar pokémon">
+            <input 
+              type="text" 
+              class="form-control" 
+              placeholder="Pesquisar pokémon"
+              v-model="nomePokemon"
+              @keyup.enter="filtrarPokemons"
+              >
+              <input 
+              type="text" 
+              class="form-control mt-2" 
+              placeholder="Pesquisar pokémon v-model => watch"
+              v-model="nomePokemon2"
+             
+              >
           </div>
+          
         </div>
 
         <div class="row">
           <div class="pokedex-catalogo">
 
             <!-- início listagem dinâmica -->
+            <transition-group name="ordenacao">
             <div v-for="p in pokemons" :key="p.id" :class="`cartao-pokemon bg-${p.tipo}`" @click="analisarPokemon(p)">
               <h1>{{ p.id }} {{ p.nome }}</h1>
               <span>{{ p.tipo }}</span>
@@ -89,7 +105,7 @@
                   <img :src="require(`@/assets/imgs/pokemons/${p.imagem}`)">
                 </transition>
               </div>
-            </div>
+            </div></transition-group>
             <!-- fim listagem dinâmica -->
 
           </div>
@@ -110,9 +126,20 @@ export default {
     exibirEvolucoes: false,
     pokemon: {},
     pokemons: [],
-    ordenacao: ''
+    ordenacao: '', 
+    nomePokemon: '',
+    nomePokemon2: ''
   }),
   watch: {
+    nomePokemon2(valorNovo){
+      fetch(`http://localhost:3000/pokemons?nome_like=${valorNovo}`)
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        this.pokemons = data
+      })
+    },
     ordenacao(valorNovo) {
       console.log(this.pokemons);
       if (valorNovo == 1) {
@@ -137,6 +164,32 @@ export default {
           }
 
           return 0
+        })
+      }
+      if(valorNovo == 3) { // organização alfabética de A - Z
+        this.pokemons.sort((proximo, atual) => {
+          // 1 caso a ordem esteja correta
+          if(atual.nome < proximo.nome){
+            return 1
+          }
+          //-1 caso a ordem esteja errada (necessário inverter posições)
+          if(atual.nome > proximo.nome){
+            return -1
+          }
+          //  retorna 0 caso nenhuma ação seja nescessário
+          return 0
+        })
+      }
+      if(valorNovo == 4){ /// odedenação alfabetica de Z - A
+        this.pokemons.sort((proximo, atual) => {
+          // let resultado1 = atual.nome.localeCompare(proximo.nome)
+          // let resultado2 = proximo.nome.localeCompare(atual.nome)
+
+          //odenação decrescente 
+          return atual.nome.localeCompare(proximo.nome)
+
+          // console.log('atual e o proximo: ', resultado1);
+          // console.log('proximo e o atual> ', resultado2);
         })
       }
     }
@@ -188,6 +241,15 @@ export default {
       if (this.pokemon.habilidades[indice]) {
         this.pokemon.habilidades.splice(indice, 1)
       }
+    },
+    filtrarPokemons(){
+      fetch(`http://localhost:3000/pokemons?nome_like=${this.nomePokemon}`)
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        this.pokemons = data
+      })
     }
   }
 }
